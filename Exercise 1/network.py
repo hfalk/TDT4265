@@ -21,7 +21,7 @@ import numpy as np
 
 class Network(object):
 
-    def __init__(self, sizes):
+    def __init__(self, sizes, activation_func, activation_func_prime):
         """The list ``sizes`` contains the number of neurons in the
         respective layers of the network.  For example, if the list
         was [2, 3, 1] then it would be a three-layer network, with the
@@ -37,11 +37,13 @@ class Network(object):
         self.biases = [np.random.randn(y, 1) for y in sizes[1:]]
         self.weights = [np.random.randn(y, x)
                         for x, y in zip(sizes[:-1], sizes[1:])]
+        self.activation_func = activation_func
+        self.self.activation_func_prime = self.activation_func_prime
 
     def feedforward(self, a):
         """Return the output of the network if ``a`` is input."""
         for b, w in zip(self.biases, self.weights):
-            a = sigmoid(np.dot(w, a)+b)
+            a = self.activation_func(np.dot(w, a)+b)
         return a
 
     def SGD(self, training_data, epochs, mini_batch_size, eta,
@@ -104,11 +106,11 @@ class Network(object):
         for b, w in zip(self.biases, self.weights):
             z = np.dot(w, activation)+b
             zs.append(z)
-            activation = sigmoid(z)
+            activation = self.activation_func(z)
             activations.append(activation)
         # backward pass
         delta = self.cost_derivative(activations[-1], y) * \
-            sigmoid_prime(zs[-1])
+            self.activation_func_prime(zs[-1])
         nabla_b[-1] = delta
         nabla_w[-1] = np.dot(delta, activations[-2].transpose())
         # Note that the variable l in the loop below is used a little
@@ -119,7 +121,7 @@ class Network(object):
         # that Python can use negative indices in lists.
         for l in range(2, self.num_layers):
             z = zs[-l]
-            sp = sigmoid_prime(z)
+            sp = self.activation_func_prime(z)
             delta = np.dot(self.weights[-l+1].transpose(), delta) * sp
             nabla_b[-l] = delta
             nabla_w[-l] = np.dot(delta, activations[-l-1].transpose())
