@@ -46,7 +46,7 @@ class Network(object):
         return a
 
     def SGD(self, training_data, epochs, mini_batch_size, eta,
-            test_data=None, activation_func=sigmoid, activation_func_prime=sigmoid_prime):
+            activation_func, activation_func_prime, test_data=None):
         """Train the neural network using mini-batch stochastic
         gradient descent.  The ``training_data`` is a list of tuples
         ``(x, y)`` representing the training inputs and the desired
