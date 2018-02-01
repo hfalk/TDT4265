@@ -38,7 +38,7 @@ class Network(object):
         self.weights = [np.random.randn(y, x)
                         for x, y in zip(sizes[:-1], sizes[1:])]
         self.activation_func = activation_func
-        self.self.activation_func_prime = activation_func_prime
+        self.activation_func_prime = activation_func_prime
 
     def feedforward(self, a):
         """Return the output of the network if ``a`` is input."""
